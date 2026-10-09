@@ -1,0 +1,62 @@
+/* ===== Design tokens (fallback values first for browsers without CSS variables) ===== */
+:root { --accent: #2457d6; --border: #d0d5dd; --bg: #fff; --text: #1d2939; --radius: 8px; }
+
+body { font-family: system-ui, Arial, sans-serif; color: #1d2939; background: #f5f7fa; margin: 0; }
+.page { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+/* ===== Component base ===== */
+.tabs { background: #fff; border: 1px solid #d0d5dd; border-radius: 8px; margin-bottom: 1.5rem; overflow: hidden; }
+.tabs__list { display: flex; border-bottom: 1px solid #d0d5dd; overflow-x: auto; /* scroll, never wrap, on narrow screens */ }
+.tabs__tab {
+  flex: 0 0 auto; padding: .85rem 1.25rem; border: 0; background: none; cursor: pointer;
+  font: inherit; color: #475467; border-bottom: 3px solid transparent; margin-bottom: -1px;
+  transition: color .2s, border-color .2s, background-color .2s;
+}
+.tabs__tab:hover { background: #f2f4f7; }
+.tabs__tab[aria-selected="true"] { color: #2457d6; border-bottom-color: #2457d6; font-weight: 600; }
+.tabs__tab:focus-visible { outline: 3px solid #2457d6; outline-offset: -3px; } /* visible keyboard focus */
+.tabs__panel { padding: 1.25rem; }
+.tabs__panel:focus-visible { outline: 3px solid #2457d6; outline-offset: -3px; }
+.tabs__panel[hidden] { display: none; } /* ensures [hidden] wins over any display rule */
+
+/* ===== Animation (added by JS only when a panel is shown) ===== */
+.tabs__panel--enter { animation: tabs-fade .25s ease-out; }
+@keyframes tabs-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ===== Fallback: no JS => hide the tab buttons and show every panel stacked ===== */
+.no-js .tabs__list { display: none; }
+.no-js .tabs__panel[hidden] { display: block; }
+
+/* ===== Responsive: on phones, make tabs fill the width and tighten spacing ===== */
+@media (max-width: 480px) {
+  .tabs__tab { flex: 1 1 auto; padding: .75rem .6rem; font-size: .9rem; }
+  .tabs__panel { padding: 1rem; }
+}
+
+/* ===== Accessibility: respect users who prefer less motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .tabs__panel--enter { animation: none; }
+  .tabs__tab { transition: none; }
+}
+
+/* ===== Disabled tab (aria-disabled="true") ===== */
+.tabs__tab[aria-disabled="true"] { color: #98a2b3; cursor: not-allowed; background: none; }
+
+/* ===== Vertical orientation (data-orientation="vertical") ===== */
+.tabs[data-orientation="vertical"] { display: flex; }
+.tabs[data-orientation="vertical"] .tabs__list {
+  flex-direction: column; border-bottom: 0; border-right: 1px solid #d0d5dd; overflow: visible; min-width: 9rem;
+}
+.tabs[data-orientation="vertical"] .tabs__tab {
+  text-align: left; border-bottom: 0; border-right: 3px solid transparent; margin: 0 -1px 0 0;
+}
+.tabs[data-orientation="vertical"] .tabs__tab[aria-selected="true"] { border-right-color: #2457d6; }
+.tabs[data-orientation="vertical"] .tabs__panel { flex: 1; }
+@media (max-width: 480px) { /* stack on phones so panels keep enough width */
+  .tabs[data-orientation="vertical"] { display: block; }
+  .tabs[data-orientation="vertical"] .tabs__list { flex-direction: row; border-right: 0; border-bottom: 1px solid #d0d5dd; overflow-x: auto; }
+  .tabs[data-orientation="vertical"] .tabs__tab { border-right: 0; border-bottom: 3px solid transparent; margin: 0 0 -1px; }
+  .tabs[data-orientation="vertical"] .tabs__tab[aria-selected="true"] { border-bottom-color: #2457d6; }
+}
+
+.note { font-size: .85rem; color: #667085; margin: -1rem 0 1.5rem; }

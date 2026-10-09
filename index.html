@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!-- "no-js" is swapped for "js" by tabs.js. Without JS, every panel stays visible (graceful fallback). -->
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Accessible Tabs Component</title>
+  <link rel="stylesheet" href="tabs.css">
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
+</head>
+<body>
+  <main class="page">
+    <h1>Accessible Tabs Component</h1>
+
+    <!-- Instance 1: data-tabs marks the root. Each tab button points to its panel via aria-controls. -->
+    <div class="tabs" data-tabs data-hash>
+      <div class="tabs__list" role="tablist" aria-label="Product information">
+        <button class="tabs__tab" role="tab" id="t1-tab1" aria-controls="t1-panel1" aria-selected="true">Overview</button>
+        <button class="tabs__tab" role="tab" id="t1-tab2" aria-controls="t1-panel2" aria-selected="false" tabindex="-1">Features</button>
+        <button class="tabs__tab" role="tab" id="t1-tab3" aria-controls="t1-panel3" aria-selected="false" tabindex="-1">Reviews</button>
+        <!-- Disabled tab: skipped by keyboard and clicks -->
+        <button class="tabs__tab" role="tab" id="t1-tab4" aria-controls="t1-panel4" aria-selected="false" aria-disabled="true" tabindex="-1">Coming soon</button>
+      </div>
+      <section class="tabs__panel" role="tabpanel" id="t1-panel1" aria-labelledby="t1-tab1" tabindex="0">
+        <h2>Overview</h2><p>Tabs organise related content so users see one section at a time.</p>
+      </section>
+      <section class="tabs__panel" role="tabpanel" id="t1-panel2" aria-labelledby="t1-tab2" tabindex="0" hidden>
+        <h2>Features</h2><p>Keyboard navigation, ARIA roles, animation, and responsive layout.</p>
+      </section>
+      <section class="tabs__panel" role="tabpanel" id="t1-panel3" aria-labelledby="t1-tab3" tabindex="0" hidden>
+        <h2>Reviews</h2><p>Try the arrow keys, Home and End while a tab is focused.</p>
+      </section>
+      <section class="tabs__panel" role="tabpanel" id="t1-panel4" aria-labelledby="t1-tab4" tabindex="0" hidden><p>Not available yet.</p></section>
+    </div>
+    <p class="note">This instance uses <code>data-hash</code>: the URL updates (e.g. <code>#t1-tab2</code>) so a refresh or shared link keeps the tab.</p>
+
+    <!-- Instance 2: proves the component is reusable. data-default-index picks the starting tab. -->
+    <div class="tabs" data-tabs data-default-index="1">
+      <div class="tabs__list" role="tablist" aria-label="Account settings">
+        <button class="tabs__tab" role="tab" id="t2-tab1" aria-controls="t2-panel1" aria-selected="false" tabindex="-1">Profile</button>
+        <button class="tabs__tab" role="tab" id="t2-tab2" aria-controls="t2-panel2" aria-selected="true">Security</button>
+      </div>
+      <section class="tabs__panel" role="tabpanel" id="t2-panel1" aria-labelledby="t2-tab1" tabindex="0" hidden>
+        <h2>Profile</h2><p>Second instance, independent of the first.</p>
+      </section>
+      <section class="tabs__panel" role="tabpanel" id="t2-panel2" aria-labelledby="t2-tab2" tabindex="0">
+        <h2>Security</h2><p>This tab opened by default via <code>data-default-index</code>.</p>
+      </section>
+    </div>
+
+    <!-- Instance 3: vertical layout, uses Up/Down arrows -->
+    <div class="tabs" data-tabs data-orientation="vertical">
+      <div class="tabs__list" role="tablist" aria-label="Help topics">
+        <button class="tabs__tab" role="tab" id="t3-tab1" aria-controls="t3-panel1" aria-selected="true">Getting started</button>
+        <button class="tabs__tab" role="tab" id="t3-tab2" aria-controls="t3-panel2" aria-selected="false" tabindex="-1">Billing</button>
+        <button class="tabs__tab" role="tab" id="t3-tab3" aria-controls="t3-panel3" aria-selected="false" tabindex="-1">Support</button>
+      </div>
+      <section class="tabs__panel" role="tabpanel" id="t3-panel1" aria-labelledby="t3-tab1" tabindex="0"><h2>Getting started</h2><p>Vertical tabs use the Up and Down arrow keys.</p></section>
+      <section class="tabs__panel" role="tabpanel" id="t3-panel2" aria-labelledby="t3-tab2" tabindex="0" hidden><h2>Billing</h2><p>Invoices and payment methods.</p></section>
+      <section class="tabs__panel" role="tabpanel" id="t3-panel3" aria-labelledby="t3-tab3" tabindex="0" hidden><h2>Support</h2><p>Contact the support team.</p></section>
+    </div>
+
+    <p id="log" aria-live="polite">Last event: none</p>
+  </main>
+
+  <script src="tabs.js"></script>
+  <script>
+    // Demo of the custom event the component dispatches on every change.
+    document.addEventListener('tabs:change', function (e) {
+      document.getElementById('log').textContent = 'Last event: "' + e.detail.tab.textContent + '" selected';
+    });
+  </script>
+</body>
+</html>
